@@ -12,7 +12,7 @@ type Options = {
   ignores?: string[]; /* 忽略的依赖文件名 glob；如 变量、mixin 文件 */
   compiler: NodeJS.ReadWriteStream | NodeJS.WriteStream;
   ignoreNodeModules?: boolean; /* 忽略 node_modules 模块，默认 true */
-  ext?: string /* 替换后缀 */;
+  ext?: string /* 替换后缀，默认不替换 */;
 };
 
 function shouldIgnore(str: string, reg?: RegExp[], ignoreNodeModules?: boolean) {
@@ -47,7 +47,7 @@ function uncomment(file: any, ext: string) {
   file.contents = Buffer.from(
     String(file.contents).replace(CSS_COMMENT_REG, (substring, match) => {
       /* 替换后缀 */
-      return String(match).replace(/(\.[a-zA-Z0-9]+)(?=['"])/, ext);
+      return ext ? String(match).replace(/(\.[a-zA-Z0-9]+)(?=['"])/, ext) : match;
     }));
 }
 
@@ -63,7 +63,7 @@ function uncomment(file: any, ext: string) {
  */
 function lightcss(options: Options) {
   const _options: Required<Options> = {
-    ext: '.css',
+    ext: '',
     ignores: ['**/_*.*'],
     ignoreNodeModules: true,
     ...options,

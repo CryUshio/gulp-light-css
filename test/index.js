@@ -79,7 +79,8 @@ test('functional test', (t) => {
     gulp.src('./src/*.less', { cwd: __dirname })
       .pipe(lightcss({
         compiler: less(),
-        ignores: ['**/_var.less']
+        ignores: ['**/_var.less'],
+        ext: '.css'
       }))
       .pipe(gulp.dest('./dist', { cwd: __dirname }))
       .on('end', async () => {
