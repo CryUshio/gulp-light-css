@@ -37,12 +37,12 @@ const validator = async (t) => {
       const fileLine = fileArray[i];
 
       if (expectLine !== fileLine) {
-        t.fail(`Validate failed at line ${i + 1}:\n${fileLine}\n\nExpected:\n${expectLine}`);
+        t.fail(`Validate failed in ${path.basename(filepath)}\n  at line ${i + 1}:\n${fileLine}\n\nExpected:\n${expectLine}`);
       }
     }
 
     if (fileArray.length > expectFileArray.length) {
-      t.fail(`Validate failed at line ${expectFileArray.length}:\n${fileArray[expectFileArray.length]}\n\nExpected Empty!`);
+      t.fail(`Validate failed in ${path.basename(filepath)}\n  at line ${expectFileArray.length}:\n${fileArray[expectFileArray.length]}\n\nExpected Empty!`);
     }
   }
 
@@ -79,7 +79,7 @@ test('functional test', (t) => {
     gulp.src('./src/*.less', { cwd: __dirname })
       .pipe(lightcss({
         compiler: less(),
-        ignores: ['**/_var.less'],
+        ignores: ['**/_var.less', '**/copy.less'],
         ext: '.css'
       }))
       .pipe(gulp.dest('./dist', { cwd: __dirname }))
