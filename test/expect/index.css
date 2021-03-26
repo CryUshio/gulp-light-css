@@ -1,0 +1,5 @@
+@import './base.css';
+@import './_reset.css';
+page {
+  color: #333;
+}
