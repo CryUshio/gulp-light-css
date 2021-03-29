@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/CryUshio/gulp-light-css/compare/v1.2.0...v1.3.0) (2021-03-29)
+
+
+### Features
+
+* 增加接口控制是否不打包ignores里面的文件 ([f4be742](https://github.com/CryUshio/gulp-light-css/commit/f4be74264cdb85d140164a24a85ec043300f43cf))
+
 ## [1.2.0](https://github.com/CryUshio/gulp-light-css/compare/v1.1.1...v1.2.0) (2021-03-26)
 
 
