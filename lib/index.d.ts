@@ -2,6 +2,7 @@
 import stream from 'stream';
 declare type Options = {
     ignores?: string[];
+    notPackIgnoreFiles?: boolean;
     compiler: NodeJS.ReadWriteStream | NodeJS.WriteStream;
     ignoreNodeModules?: boolean;
     ext?: string;

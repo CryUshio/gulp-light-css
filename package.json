@@ -4,7 +4,7 @@
   "description": "在编译时屏蔽 css import，避免冗余",
   "main": "lib/index.js",
   "scripts": {
-    "test": "rimraf ./test/dist && ava",
+    "test": "ava",
     "dev": "tsc --watch",
     "build": "rimraf lib && tsc",
     "release-major": "npm run build && standard-version --release-as major",

@@ -10,6 +10,7 @@ const CSS_COMMENT_REG = /css-light(\d+)[\s\r\n]*\{[\s\r\n]*display\s*:\s*block;?
 
 type Options = {
   ignores?: string[] /* 忽略的依赖文件名 glob；如 变量、mixin 文件 */;
+  notPackIgnoreFiles?: boolean /* 默认 false，是否不打包 ignores 匹配的文件 */;
   compiler: NodeJS.ReadWriteStream | NodeJS.WriteStream;
   ignoreNodeModules?: boolean /* 忽略 node_modules 模块，默认 true */;
   ext?: string /* 替换后缀，默认不替换 */;
@@ -42,12 +43,13 @@ function isNodeModule(pathname: string) {
 function lightcss(options: Options) {
   const _options: Required<Options> = {
     ext: '',
-    ignores: ['**/_*.*'],
+    ignores: ['**/*'],
     ignoreNodeModules: true,
+    notPackIgnoreFiles: false,
     ...options,
   };
 
-  const { compiler, ignores, ignoreNodeModules, ext } = _options;
+  const { compiler, ignores, notPackIgnoreFiles, ignoreNodeModules, ext } = _options;
   const ignoreList = ignores.map((p) => globToReg(p));
 
   if (!compiler) {
@@ -55,7 +57,7 @@ function lightcss(options: Options) {
   }
 
   return through.obj(function (file, _, cb) {
-    if (file.isNull() || shouldIgnore(file.path, ignoreList, ignoreNodeModules)) {
+    if (file.isNull() || (notPackIgnoreFiles && shouldIgnore(file.path, ignoreList, ignoreNodeModules))) {
       return cb();
     }
     if (file.isStream()) {

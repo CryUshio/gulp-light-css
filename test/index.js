@@ -1,3 +1,6 @@
+/**
+ * I'm lazy :)
+ */
 const test = require('ava');
 const path = require('path');
 const gulp = require('gulp');
@@ -5,13 +8,14 @@ const less = require('gulp-less');
 const fs = require('fs');
 const readline = require('readline');
 const { promisify } = require('util');
+const rimraf = require('rimraf');
 const lightcss = require('../lib');
 
 const readdir = promisify(fs.readdir);
 
-const validator = async (t) => {
-  const distDirPath = path.resolve(__dirname, './dist');
-  const expectDirPath = path.resolve(__dirname, './expect');
+const validator = async (expectDirname, dist, t) => {
+  const distDirPath = path.resolve(__dirname, dist);
+  const expectDirPath = path.resolve(__dirname, expectDirname);
 
   const readFileLine = (file) => {
     const arrayBuffer = [];
@@ -74,17 +78,37 @@ const validator = async (t) => {
 }
 
 test('functional test', (t) => {
-
+  const DIST = 'dist1';
   return new Promise((resolve) => {
+    rimraf.sync(path.resolve(__dirname, DIST));
     gulp.src('./src/*.less', { cwd: __dirname })
       .pipe(lightcss({
         compiler: less(),
         ignores: ['**/_var.less', '**/copy.less'],
         ext: '.css'
       }))
-      .pipe(gulp.dest('./dist', { cwd: __dirname }))
+      .pipe(gulp.dest(DIST, { cwd: __dirname }))
       .on('end', async () => {
-        await validator(t);
+        await validator('expect1', DIST, t);
+        resolve()
+      });
+  });
+});
+
+test('functional test with not pack ignored files', (t) => {
+  const DIST = 'dist2';
+  return new Promise((resolve) => {
+    rimraf.sync(path.resolve(__dirname, DIST));
+    gulp.src('./src/*.less', { cwd: __dirname })
+      .pipe(lightcss({
+        compiler: less(),
+        ignores: ['**/_var.less', '**/copy.less'],
+        ext: '.css',
+        notPackIgnoreFiles: true
+      }))
+      .pipe(gulp.dest(DIST, { cwd: __dirname }))
+      .on('end', async () => {
+        await validator('expect2', DIST, t);
         resolve()
       });
   });
